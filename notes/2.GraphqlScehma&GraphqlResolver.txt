@@ -1,0 +1,39 @@
+Graphql Schema:
+Practical with Typescript:
+
+command 1:
+npm init --yes
+
+======================
+
+command 2:
+npm install --save-dev typescript
+
+=====================
+
+command 3 configure typescript:
+npx tsc --init  --rootDir src --outDir dist --lib dom,es6 --module commonjs --removeComments
+
+It will create the tsconfig.json and make sure add this too in tsconfig.json after compilerOptions: {{}, "include": ["src/**/*.ts"]}
+
+==================
+
+
+command 4 apna program Run karney k liye nodemon ts-node ka use karey gey:
+npm install --save-dev nodemon ts-node
+
+nodemon
+project ku watch karta rehtha hai agar koi bi changes kartey hai
+ts-node
+used to transpile typescript to js step by step
+
+=======================
+
+command 5 create file:
+src/server.ts
+
+and transpile
+npx nodemon src/server.ts --exec ts-node src/server.ts
+
+========================
+
