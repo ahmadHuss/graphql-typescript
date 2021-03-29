@@ -1,2 +1,2 @@
 # graphql-typescript
-A graphql with typescript practical workshop
+A graphql with typescript practical workshop 😃
