@@ -1,0 +1,311 @@
+Graphql Schema:
+Practical with Typescript:
+
+command 1:
+npm init --yes
+
+======================
+
+command 2:
+npm install --save-dev typescript
+
+=====================
+
+command 3 configure typescript:
+npx tsc --init  --rootDir src --outDir dist --lib dom,es6 --module commonjs --removeComments
+
+It will create the tsconfig.json and make sure add this too in tsconfig.json after compilerOptions: {{}, "include": ["src/**/*.ts"]}
+
+==================
+
+
+command 4 apna program Run karney k liye nodemon ts-node ka use karey gey:
+npm install --save-dev nodemon ts-node
+
+nodemon
+project ku watch karta rehtha hai agar koi bi changes kartey hai
+ts-node
+used to transpile typescript to js step by step
+
+=======================
+
+command 5 create file:
+src/server.ts
+
+and transpile
+npx nodemon src/server.ts --exec ts-node src/server.ts
+
+========================
+
+server.ts ku apollo server mein convert kartey hai Graphiql k liye.
+
+Why Apollo server?
+
+Apollo server is the most mature server for Graphiql until now.
+
+Apollo server humarey liye automatic documentation bi karta hai jub hum QUERY likhey gey.
+
+Lets start few dependencies for apollo server or express server will be used as middleware for the Apollo server.
+
+npm install apollo-server-express express cors
+
+after that
+
+npm install --save-dev @types/express @types/node
+
+============================
+
+server.ts:
+
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
+
+
+const app = express();
+
+const server = new ApolloServer({});
+
+app.use('*', cors());
+
+server.applyMiddleware({app, path: '/graphql'});
+
+app.listen({port: 8000}, () => {
+    console.log('ApolloServer is running on https://localhost:8000/graphql')
+});
+
+Command: npx nodemon src/server.ts --exec ts-node src/server.ts
+
+Yeh run nahi ho gi ab schema create karna hai file create karey gey.
+
+==============================================
+Schema:
+Now we are creating Graphql Schema for Query:
+
+src/schema/schema.graphql
+
+# Schema is the representation of the interactions and data.
+
+# interactions = query + mutations
+# data = ju bi data type hota hai wu data hota hai type User {}
+
+# Query
+type Query {
+    helloWorld: String!
+}
+
+# 'exclamation mark' means compulsory and without 'exclamation mark' means optional
+# Iss above file ku GraphQl Query Schema kehthey hai. Schema define karney k liye hum aik language
+# use kartey hai jissey hum Graphql schema definition language boltey hai.
+
+
+# Graphql schema language mein kuch primitive data types hotey hai.
+
+# Primitive built-in Data types:
+# String, Int, Float, Boolean and ID
+
+# yeh 5 built-in data types hai Graphql mein ID ku hum UniqueIdentifier bi boltey hai.
+
+# hum ney Query Schema bana liya hai lekin Query Schema without Resolver is nothing.
+
+
+===================================
+
+Ab Resolver banatey hai create file resolvers.ts
+
+src/resolvers.ts:
+
+Now we are creating Graphql Resolver for Query:
+
+/**
+ * Resolver naam se hi hi zahir hai yeh resolve karta hai.
+ * Kya resolve karta hai:
+ * Ju bi Request aayi hai Graphql Client sey Request k base mein
+ * data resolve karta hai ta k return ker saky response ku.
+*/
+
+// Abi hum ney Query Schema likha hai ab hum Query Schema k liye resolver likhey gey.
+// Resolver likhney k liye huamy `graphql-tools` se kuch import karna ho ga.
+// yani `graphql-tools` install karna ho ga.
+// npm install graphql-tools
+import { IResolvers } from 'graphql-tools';
+
+
+// Humara schema 'helloWorld' hai tu humay iss 'helloWorld' Schema ka resolver banana hai.
+const resolvers: IResolvers = {
+    Query: {
+        helloWorld: () => 'Hello World from Apollo Server!'
+    }
+}
+// Uss k baad export ker dena hai.
+export default resolvers;
+
+
+=====================
+
+Adding whole Schema file to Apollo Server:
+
+Abi bi server run nahi ho ga kyon k Hum ney apna 'Schema' or 'Resolver' declare tu ker diya hai lekin
+innhey hum ney abi tuk USE nahi kiya.
+
+Apollo server ku maloom hi nahi hai abi hamarey paas schema or resolver hai. inn ku add karna hai.
+
+// const server = new ApolloServer({});
+
+hum ney iss per add karney hai, tu aaj kal ki new best practice yeh hai k create file ki eilhda sey
+
+"src/schema.ts"
+
+
+yeh file create karna hai basically "adding resolver to schema". or iss k baad new dependencies install karna hai.
+
+command yeh dependencies graphql resolver ku merge karney k liye:
+
+npm install graphql graphql-import-node
+
+
+"src/schema.ts":
+// Here we will import our resolvers
+
+import 'graphql-import-node';
+import { GraphQLSchema } from 'graphql';
+import { makeExecutableSchema } from 'graphql-tools';
+import * as typeDefs from './schema/schema.graphql';
+import resolvers from './resolvers';
+
+const schema: GraphQLSchema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+});
+
+export default schema;
+
+================================================
+
+"src/server.ts"
+
+// Now here we will add schema with playground: true
+
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
+import schema  from './schema';
+
+const app = express();
+
+const server = new ApolloServer({schema, playground: true});
+
+app.use('*', cors());
+
+server.applyMiddleware({app, path: '/graphql'});
+
+app.listen({port: 8000}, () => {
+    console.log('ApolloServer is running on http://localhost:8000/graphql')
+});
+
+================================================
+
+After that: add npm script
+
+"start": "nodemon src/server.ts --exec ts-node src/server.ts"
+
+Your Graphql playground with your schema documentation will bi launch on this link:
+http://localhost:8000/graphql
+
+
+==============================================================================
+Creating Graphql Schema for Mutation:
+
+Now mein aap ku bata chukha hu k Graphql schema mein interactions Query + Mutations hoti hai
+Ab hum mutations apney schema mein Add karey gey or Data type uss mutation ki define karey gey.
+
+"src/schema/schema.graphql":
+
+# Query Schema
+type Query {
+    helloWorld: String!
+}
+
+# Mutation Schema to add User to existing users yeh existing users database mein ho saktey hai
+# ya kisi file mein bi ho saktey hai ! exclamation mark means compulsory and without exclamation mark
+# means optional
+type Mutation {
+    addUser(name: String!, bio: String): User!
+}
+
+# data wu har type or object ju hum use ker rahey hai magar interaction nahi hota
+# interaction sirf Query or Mutation se hi hota hai. baki saara Data category mein aata
+# hai. User object is data here.
+type User {
+    id: ID
+    name: String
+    bio: String
+}
+
+=============================================
+
+Now lets add resolver for our mutation:
+
+"src/resolvers.ts":
+
+Saarey "mutation resolvers" "Mutation" category mein jaaye gey.
+
+import {IResolvers} from 'graphql-tools';
+
+const users = [{
+    id: 'id-1',
+    name: 'Ahmad Hussnain',
+    bio: 'I don\'t know'
+}];
+
+let count = users.length;
+
+const resolvers: IResolvers = {
+    Query: {
+        helloWorld: () => 'Hello World from Apollo Server!'
+    },
+    Mutation: {
+        addUser: (parent, args) => {
+        // yeh database bi ho sakta hai lekin abi hum waise hi check ker rahey hai!
+            let newUser = {
+                id: `id-${++count}`,
+                name: args.name,
+                bio: args.bio
+            };
+            users.push(newUser);
+            console.log(users);
+            return newUser;
+        }
+    }
+};
+
+export default resolvers;
+
+Refresh: http://localhost:8000/graphql
+
+yani k addUser mein humay name ju k mandatory hai wu or bio optional hai response mein humay
+User return ho ga ju k fields id, name bio raktha hai.
+
+Testing Graphql mutation:
+Playground:
+
+mutation {
+  addUser(name: "Ahmad Hassan"){
+    id,
+    name,
+    bio
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "addUser": {
+      "id": "id-7",
+      "name": "Ahmad Hassan",
+      "bio": null
+    }
+  }
+}
+
