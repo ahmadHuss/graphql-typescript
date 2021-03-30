@@ -1,0 +1,22 @@
+# Schema is the representation of the interactions and data.
+
+# interactions = query + mutations
+# data = ju bi data type hota hai wu data hota hai
+
+# Query
+type Query {
+    helloWorld: String!
+}
+
+
+# Mutation
+type Mutation {
+    addUser(name: String!, bio: String): User!
+}
+
+# Data type for the User
+type User {
+    id: ID,
+    name: String,
+    bio: String
+}
