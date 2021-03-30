@@ -1,0 +1,123 @@
+How to use Graphql Aliases:
+
+Ab mein Query schema ku barhana chahtha hu or 2 more queries add karna chatha hu.
+
+"src/schema/schema.graphql":
+
+type Query {
+    helloWorld: String!
+    users: [User]! # Get all users
+    user(id: ID!): User # get only 1 user
+}
+
+"src/resolvers":
+const resolvers: IResolvers = {
+    Query: {
+        helloWorld: () => 'Hello World from Apollo Server!',
+        users: () => users,
+        user: (parent, args) => users.find((users) => {
+            return users.id === args.id
+        })
+    },
+};
+
+Playground output:
+http://localhost:8000/graphql
+
+Playground create query to get single user:
+
+# $userID is a query variable that has compulsory type ID and we use
+# this int Query Variables with something like this: {"userID": "id-1"}
+query getSingleUserByID($userID: ID!) {
+  # resolve schema
+  user(id: $userID) {
+    id
+    name
+    bio
+  }
+}
+
+Pass query variables something like this:
+{"userID": "id-1"}
+
+
+Response:
+{
+  "data": {
+    "user": {
+      "id": "id-1",
+      "name": "Ahmad Hussnain",
+      "bio": "I don't know"
+    }
+  }
+}
+
+
+=====================================
+
+Lekin agar mujhey user2 chahiye tu
+
+Playground create another argument for $userID2:
+
+query getSingleUserByID($userID: ID!, $userID2: ID!) {
+  user(id: $userID) {
+    id
+    name
+    bio
+  }
+  user(id: $userID2) {
+    id
+    name
+    bio
+  }
+}
+
+Pass query variables something like this:
+{"userID": "id-1", "userID2": "id-2"}
+
+
+Output Error
+kyon k hum same query call ker rahey hai with different user ID.
+========================
+
+Aliases:
+When we have to call multiple data of same type then we user aliases:
+Tu hum yeh problem ku solve karney k liye Aliases ka use karey gey
+yani k aik user ku user1 alias or dosrey user ku user2 alias de dey gey
+
+When we use Alias:
+Jub Users have same data structure and we want to get two users then we use aliases to get that 2 users:
+
+Playground get 2 users from the same data structure and use aliases:
+
+query getSingleUserByID($userID: ID!, $userID2: ID!) {
+  user1: user(id: $userID) {
+    id
+    name
+    bio
+  }
+  user2: user(id: $userID2) {
+    id
+    name
+    bio
+  }
+}
+
+Pass query variables something like this:
+{"userID": "id-1", "userID2": "id-2"}
+
+Output:
+{
+  "data": {
+    "user1": {
+      "id": "id-1",
+      "name": "Ahmad Hussnain",
+      "bio": "I don't know"
+    },
+    "user2": {
+      "id": "id-2",
+      "name": "Ahmad Hassan",
+      "bio": null
+    }
+  }
+}
