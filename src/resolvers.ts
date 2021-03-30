@@ -10,7 +10,11 @@ let count = users.length;
 
 const resolvers: IResolvers = {
     Query: {
-        helloWorld: () => 'Hello World from Apollo Server!'
+        helloWorld: () => 'Hello World from Apollo Server!',
+        users: () => users,
+        user: (parent, args) => users.find((users) => {
+            return users.id === args.id
+        })
     },
     Mutation: {
         addUser: (parent, args) => {
