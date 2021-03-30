@@ -5,7 +5,7 @@ import schema  from './schema';
 
 const app = express();
 
-const server = new ApolloServer({schema, playground: true});
+const server = new ApolloServer({schema, playground: true, introspection: true});
 
 app.use('*', cors());
 
