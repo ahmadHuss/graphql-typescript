@@ -43,7 +43,7 @@ https://api.github.com/users/ahmadhuss
 Github Graphql Example after give authorization:
 https://developer.github.com/v4/explorer
 
-Past this in Github Graphiql:
+Past this in Github Graphiql mutation user(login: "ahmadHuss") {}  here curly braces means SELECT:
 {
   user(login: "ahmadHuss") {
     name

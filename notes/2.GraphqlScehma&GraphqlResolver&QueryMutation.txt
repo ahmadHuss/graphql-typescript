@@ -286,6 +286,19 @@ Refresh: http://localhost:8000/graphql
 yani k addUser mein humay name ju k mandatory hai wu or bio optional hai response mein humay
 User return ho ga ju k fields id, name bio raktha hai.
 
+Testing Graphql simple query {} curly braces represent SELECT:
+query {
+  helloWorld
+}
+
+Response:
+{
+  "data": {
+    "helloWorld": "Hello World from Apollo Server!"
+  }
+}
+
+
 Testing Graphql mutation:
 Playground:
 
