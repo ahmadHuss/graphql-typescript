@@ -1,2 +1,2 @@
-# graphql-typescript
-A graphql with typescript practical workshop 😃
+# Graphql with Typescipt
+A graphql with typescript work 😃
