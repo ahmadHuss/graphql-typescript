@@ -1,13 +1,13 @@
 # Schema is the representation of the interactions and data.
 
-# interactions = query + mutations
-# data = ju bi data type hota hai wu data hota hai
+# Interactions = query + mutations
+# Data = Datatypes
 
 # Query
 type Query {
     helloWorld: String!
     users: [User]! # Get all users
-    user(id: ID!): User # get only 1 user
+    user(id: ID!): User # Get only 1 user by ID
 }
 
 
@@ -16,7 +16,7 @@ type Mutation {
     addUser(name: String!, bio: String): User!
 }
 
-# Data type for the User
+# Datatype for the User
 type User {
     id: ID,
     name: String,
