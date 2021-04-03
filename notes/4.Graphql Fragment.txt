@@ -1,0 +1,95 @@
+What is Fragment:
+It is shared piece of logic.
+
+Example:
+QueryA & QueryB
+
+dono queries aik hi logic ku use ker rahi hai tu uss logic ku eilhda elihda likhney ki bajaaye aik
+hi block mein likh detey hai. or dono queries mein use ker letey hai issey fragment kehthey hai.
+
+fragment FragmentName on SchemaTypeName {
+    field1
+    field2
+}
+
+Example 1: playground pichli hi example hum dekh letey hai Alias wali mein Fragment external declare:
+
+Playground:
+query getSingleUserByID($userID: ID!, $userID2: ID!) {
+  user1: user(id: $userID) {
+    # here we use Fragment with spread operator
+    ...UserDetails
+  }
+  user2: user(id: $userID2) {
+    # here we use Fragment with spread operator
+    ...UserDetails
+  }
+}
+
+# Fragment
+fragment UserDetails on User {
+  id
+  name
+  bio
+}
+
+Query Variables:
+
+{"userID": "id-1", "userID2": "id-2"}
+Response:
+
+{
+  "data": {
+    "user1": {
+      "id": "id-1",
+      "name": "Ahmad Hussnain",
+      "bio": "I don't know"
+    },
+    "user2": {
+      "id": "id-2",
+      "name": "Ahmad Hassan",
+      "bio": null
+    }
+  }
+}
+
+
+Example 2: playground pichli hi example hum dekh letey hai Alias wali mein Fragment internal declare:
+
+query getSingleUserByID($userID: ID!, $userID2: ID!) {
+  user1: user(id: $userID) {
+    # here we use inline Fragment with spread operator
+    id,
+    ... on User {
+      name,
+      bio
+    }
+  }
+  user2: user(id: $userID2) {
+    # here we use inline Fragment with spread operator
+    id,
+    ... on User {
+      name,
+      bio
+    }
+  }
+}
+
+Query Variables:
+{"userID": "id-1", "userID2": "id-2"}
+Response:
+
+{
+  "data": {
+    "user1": {
+      "id": "id-1",
+      "name": "Ahmad Hussnain",
+      "bio": "I don't know"
+    },
+    "user2": {
+      "id": "id-2",
+      "name": "Ahmad Hassan",
+      "bio": null
+    }
+  }
+}

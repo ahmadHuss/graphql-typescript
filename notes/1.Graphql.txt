@@ -1,0 +1,77 @@
+GraphQL
+we even built a nice library that generates GraphQL ASTs so we can make dynamic queries very easily.
+
+I was curious. Is the app you running in the video is a different project and basically what is it all about?
+
+
+Parse the schema string into an Abstract Syntax Tree (AST)
+Transform the AST into a GraphQLSchema
+
+====================================================
+
+Introduction:
+
+Graphql bi backend per kaam karta hai or frontend mein ussey consume kiya jaata hai.
+
+What is Actually?
+Graphql basically aik query language hai API k liye jaise SQL hoti hai Database k liye. yani k database mein data update, delete, insert ker saktey hai.
+
+Similar graphql languae hai API k liye not database k liye.
+
+Hum apni API se data GET, POST, UPDATE, DELETE ker saktey hai.
+
+Graphql ku banaya gya hai API k data ku queries(Getting the daa) karney k liye or manipulate(Insert, Updater, Delete) karney liey.
+
+Graphql ku bannaney ka ju goal tha wu tha SINGLE ENDPOINT.
+
+yani K REST mein login k liye different URL
+Register k liye different URL, Proudct ku filter karney k liey eilhda URL
+Lekin graphql mein aisa nahi hota. Yani k itney zyaada URL na rakhey sirf aik hi se URL se saara data fetch ker sakey.
+
+-------
+
+Yani k aik field hai tu sirf aik field mein access ker sakta hu.
+jub k REST Mein sirf aik field access karney k liye mujhey puri object lena parti hai.
+
+
+Improve performance sirf limit data miley ga, yani k ju client ney manga hai sirf wohi miley ga.
+iss se mobile apps bi sahli chaley gi. Phone application k liye aik hi byte hai.
+
+REST Github Example:
+https://api.github.com/users/ahmadhuss
+
+Github Graphql Example after give authorization:
+https://developer.github.com/v4/explorer
+
+Past this in Github Graphiql mutation user(login: "ahmadHuss") {}  here curly braces means SELECT:
+{
+  user(login: "ahmadHuss") {
+    name
+    login
+    bio
+    avatarUrl
+    location
+    isViewer
+    followers(last: 10) {
+      totalCount
+      nodes {
+        login
+      }
+    }
+  }
+}
+
+Remove field you can get what you wanted.
+
+===========================================================
+
+Graphql is typed:
+
+iss ka mutlub yeh hai k iss mein har variables ka type define hota hai.
+
+yani Array of something tu wu ju something hai wu humay define karna ho gi.
+
+==========================================================
+
+
+
